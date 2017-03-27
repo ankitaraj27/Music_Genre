@@ -31,9 +31,9 @@ def create_ceps(fn):
     #ceps=whiten(ceps)
     #final=vq(ceps,new_arr)
     ceps = my_mfcc(fn)
-    pca=PCA(n_components=5)
-    fit=pca.fit(ceps)
-    ceps=fit.components_
+    #pca=PCA(n_components=5)
+    #fit=pca.fit(ceps)
+    #ceps=fit.components_
     
     write_ceps(ceps, fn)
 
@@ -78,9 +78,9 @@ def create_ceps_test(fn):
     ceps = my_mfcc(fn)
     data_fn = base_fn + ".ceps"
     #final=vq(ceps,new_arr)
-    pca=PCA(n_components=5)
-    fit=pca.fit(ceps)
-    ceps=fit.components_
+    #pca=PCA(n_components=5)
+    #fit=pca.fit(ceps)
+    #ceps=fit.components_
     np.save(data_fn, ceps)
     print "Written ", data_fn
     return data_fn
