@@ -24,7 +24,7 @@ clf = None
 #          Please run the classifier script first
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 def test_model_on_single_file(file_path):
-    clf = joblib.load("C:\Users\RAJ\Desktop\matlab\genreXpose-master\genreXpose\saved_model\model_ceps.pkl")
+    clf = joblib.load("C:\Users\RAJ\Desktop\matlab\genreXpose-master\genreXpose\saved_model\model_ceps.pkl") #change link
     #clf1 = joblib.load("C:\Users\RAJ\Desktop\matlab\genreXpose-master\genreXpose\saved_model\model_ceps1.pkl")
     link = create_ceps_test(file_path)
     X, y = read_ceps_test(link+".npy")
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         traverse = list(set(dirs).intersection(set(GENRE_LIST)))
         break
     fi=[]
-    test_file = "C:/Users/RAJ/Desktop/matlab/test_data"
+    test_file = "C:/Users/RAJ/Desktop/matlab/test_data"  ##change link
     for f in os.listdir(test_file):
         path=test_file+'/'+f
         print "\n\nfor file "+f
