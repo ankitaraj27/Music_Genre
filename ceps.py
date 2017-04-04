@@ -9,6 +9,7 @@ from scipy.cluster.vq import whiten,vq
 from sklearn.decomposition import PCA
 from utils import GENRE_DIR, CHART_DIR, GENRE_LIST
 from mfcc import my_mfcc
+import sklearn
 
 def write_ceps(ceps, fn):
     """
@@ -25,15 +26,15 @@ def create_ceps(fn):
         Creates the MFCC features. 
     """
     #print 'aaya'
-##    sample_rate, X = scipy.io.wavfile.read(fn)
-##    X[X==0]=1
-##    ceps, mspec, spec = mfcc(X,sample_rate)
+    sample_rate, X = scipy.io.wavfile.read(fn)
+    X[X==0]=1
+    ceps, mspec, spec = mfcc(X,sample_rate)
     #ceps=whiten(ceps)
     #final=vq(ceps,new_arr)
-    ceps = my_mfcc(fn)
-    #pca=PCA(n_components=5)
-    #fit=pca.fit(ceps)
-    #ceps=fit.components_
+    #ceps = my_mfcc(fn)
+##    pca=PCA(n_components=5)
+##    fit=pca.fit(ceps)
+##    ceps=fit.components_
     
     write_ceps(ceps, fn)
 
@@ -48,12 +49,18 @@ def read_ceps(genre_list, base_dir=GENRE_DIR):
     i=0;
     for label, genre in enumerate(genre_list):
         for fn in glob.glob(os.path.join(base_dir, genre, "*.ceps.npy")):
+            
             ceps = np.load(fn)
+            new_cep = sklearn.preprocessing.normalize(ceps, norm='l2', axis=1, copy=True, return_norm=True)
+            ceps = new_cep[0]
             #X = np.load(fn)
             num_ceps = len(ceps)
             #X = ceps.mean_
             #
-            X.append(np.mean(ceps, axis=0))
+            ceps=np.reshape(ceps,(len(ceps)*len(ceps[0])), order = 'C')
+##            for i in range(len(ceps)):
+##                temp.append(ceps[i])
+            X.append(ceps)
             y.append(label)
             i=i+1;
     
@@ -68,19 +75,19 @@ def create_ceps_test(fn):
         saves them to disk, and returns the saved file name.
     """
     #print fn
-##    sample_rate, X = scipy.io.wavfile.read(fn)
-##    X[X==0]=1
+    sample_rate, X = scipy.io.wavfile.read(fn)
+    X[X==0]=1
 ##    #np.nan_to_num(X)
-##    ceps, mspec, spec = mfcc(X,sample_rate)
+    ceps, mspec, spec = mfcc(X,sample_rate)
 ##    #ceps = whiten(ceps)
     base_fn, ext = os.path.splitext(fn)
     print base_fn
-    ceps = my_mfcc(fn)
+    #ceps = my_mfcc(fn)
     data_fn = base_fn + ".ceps"
     #final=vq(ceps,new_arr)
-    #pca=PCA(n_components=5)
-    #fit=pca.fit(ceps)
-    #ceps=fit.components_
+##    pca=PCA(n_components=5)
+##    fit=pca.fit(ceps)
+##    ceps=fit.components_
     np.save(data_fn, ceps)
     print "Written ", data_fn
     return data_fn
@@ -95,9 +102,12 @@ def read_ceps_test(test_file):
     y = []
     ceps = np.load(test_file)
     #X = np.load(test_file)
+    new_cep = sklearn.preprocessing.normalize(ceps, norm='l2', axis=1, copy=True, return_norm=True)
+    ceps=new_cep[0]
     num_ceps = len(ceps)
-    X.append(np.mean(ceps, axis=0))
-    #X = ceps.mean_
+    #X.append(np.mean(ceps, axis=0))
+    ceps=np.reshape(ceps,(len(ceps)*len(ceps[0])), order = 'C')
+    X.append((ceps))
     return np.array(X), np.array(y)
 
 
